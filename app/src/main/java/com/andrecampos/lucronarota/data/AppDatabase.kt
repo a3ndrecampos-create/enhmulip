@@ -4,27 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
-
-class Converters {
-    @TypeConverter
-    fun tipoParaString(tipo: TipoCorrida): String = tipo.name
-
-    @TypeConverter
-    fun stringParaTipo(valor: String): TipoCorrida = TipoCorrida.valueOf(valor)
-}
 
 @Database(
-    entities = [Corrida::class, ConfigVeiculo::class],
-    version = 1,
+    entities = [Veiculo::class, Diaria::class],
+    version = 2,
     exportSchema = false
 )
-@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun corridaDao(): CorridaDao
-    abstract fun configDao(): ConfigDao
+    abstract fun veiculoDao(): VeiculoDao
+    abstract fun diariaDao(): DiariaDao
 
     companion object {
         @Volatile

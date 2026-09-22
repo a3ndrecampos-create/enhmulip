@@ -9,7 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.andrecampos.lucronarota.data.AppDatabase
-import com.andrecampos.lucronarota.data.CorridaRepository
+import com.andrecampos.lucronarota.data.DiariaRepository
 import com.andrecampos.lucronarota.ui.ViewModelFactory
 import com.andrecampos.lucronarota.ui.navigation.LucroNaRotaApp
 import com.andrecampos.lucronarota.ui.theme.LucroNaRotaTheme
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val database = AppDatabase.obterInstancia(applicationContext)
-        val repository = CorridaRepository(database.corridaDao(), database.configDao())
+        val repository = DiariaRepository(database.diariaDao(), database.veiculoDao())
         val factory = ViewModelFactory(repository)
 
         setContent {

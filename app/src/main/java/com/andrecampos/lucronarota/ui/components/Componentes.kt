@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -27,12 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.andrecampos.lucronarota.data.Corrida
-import com.andrecampos.lucronarota.data.TipoCorrida
-import com.andrecampos.lucronarota.ui.theme.AzulParticular
+import com.andrecampos.lucronarota.data.Diaria
 import com.andrecampos.lucronarota.ui.theme.Emerald
 import com.andrecampos.lucronarota.ui.theme.LucroNegativo
+import com.andrecampos.lucronarota.util.Calculadora
 import com.andrecampos.lucronarota.util.formatarData
+import com.andrecampos.lucronarota.util.formatarKm
 import com.andrecampos.lucronarota.util.formatarMoeda
 
 @Composable
@@ -73,14 +72,13 @@ fun StatCard(
 }
 
 @Composable
-fun CorridaListItem(
-    corrida: Corrida,
-    lucro: Double,
+fun DiariaListItem(
+    diaria: Diaria,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     onDelete: (() -> Unit)? = null
 ) {
-    val corTipo = if (corrida.tipo == TipoCorrida.APP) Emerald else AzulParticular
+    val lucro = Calculadora.lucroLiquido(diaria)
     val corLucro = if (lucro >= 0) Emerald else LucroNegativo
 
     Card(
@@ -99,24 +97,19 @@ fun CorridaListItem(
                 Box(
                     modifier = Modifier
                         .size(38.dp)
-                        .background(corTipo.copy(alpha = 0.15f), CircleShape),
+                        .background(Emerald.copy(alpha = 0.15f), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = if (corrida.tipo == TipoCorrida.APP) Icons.Filled.DirectionsCar else Icons.Filled.Person,
+                        imageVector = Icons.Filled.DirectionsCar,
                         contentDescription = null,
-                        tint = corTipo
+                        tint = Emerald
                     )
                 }
                 Column(modifier = Modifier.padding(start = 12.dp)) {
+                    Text(text = diaria.veiculoNome, style = MaterialTheme.typography.titleMedium)
                     Text(
-                        text = corrida.plataforma.ifBlank {
-                            if (corrida.tipo == TipoCorrida.APP) "Corrida por app" else "Corrida particular"
-                        },
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        text = "${corrida.dataHora.formatarData()} · ${corrida.kmRodado} km",
+                        text = "${(diaria.fimEm ?: diaria.inicioEm).formatarData()} · ${diaria.kmRodado.formatarKm()}",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -124,7 +117,7 @@ fun CorridaListItem(
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = corrida.valorGanho.formatarMoeda(),
+                    text = (diaria.ganho ?: 0.0).formatarMoeda(),
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
@@ -137,7 +130,7 @@ fun CorridaListItem(
                 IconButton(onClick = onDelete) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = "Remover corrida",
+                        contentDescription = "Remover diária",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }

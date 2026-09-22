@@ -18,3 +18,10 @@ fun Double.formatarDecimal(casas: Int = 2): String = String.format(localeBR, "%.
 fun Long.formatarDataHora(): String = dataHoraFormat.format(this)
 
 fun Long.formatarData(): String = dataFormat.format(this)
+
+/** Recebe uma duração em minutos e formata como "Xh Ymin" (ou só "Ymin"). */
+fun formatarDuracao(minutos: Long): String {
+    val horas = minutos / 60
+    val resto = minutos % 60
+    return if (horas > 0) "${horas}h ${resto}min" else "${resto}min"
+}

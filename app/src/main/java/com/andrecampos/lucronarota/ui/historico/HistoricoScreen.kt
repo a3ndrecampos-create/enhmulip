@@ -17,8 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.andrecampos.lucronarota.ui.ViewModelFactory
-import com.andrecampos.lucronarota.ui.components.CorridaListItem
-import com.andrecampos.lucronarota.util.Calculadora
+import com.andrecampos.lucronarota.ui.components.DiariaListItem
 
 @Composable
 fun HistoricoScreen(factory: ViewModelFactory) {
@@ -34,44 +33,42 @@ fun HistoricoScreen(factory: ViewModelFactory) {
             Text(text = "Histórico", style = MaterialTheme.typography.headlineMedium)
         }
 
-        item {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                FilterChip(
-                    selected = estado.filtro == FiltroTipo.TODAS,
-                    onClick = { viewModel.selecionarFiltro(FiltroTipo.TODAS) },
-                    label = { Text("Todas") }
-                )
-                FilterChip(
-                    selected = estado.filtro == FiltroTipo.APP,
-                    onClick = { viewModel.selecionarFiltro(FiltroTipo.APP) },
-                    label = { Text("Por app") }
-                )
-                FilterChip(
-                    selected = estado.filtro == FiltroTipo.PARTICULAR,
-                    onClick = { viewModel.selecionarFiltro(FiltroTipo.PARTICULAR) },
-                    label = { Text("Particular") }
-                )
+        if (estado.veiculos.size > 1) {
+            item {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    FilterChip(
+                        selected = estado.filtroVeiculoId == null,
+                        onClick = { viewModel.selecionarFiltro(null) },
+                        label = { Text("Todos") }
+                    )
+                    estado.veiculos.forEach { veiculo ->
+                        FilterChip(
+                            selected = estado.filtroVeiculoId == veiculo.id,
+                            onClick = { viewModel.selecionarFiltro(veiculo.id) },
+                            label = { Text(veiculo.nome) }
+                        )
+                    }
+                }
             }
         }
 
-        if (estado.corridas.isEmpty()) {
+        if (estado.diarias.isEmpty()) {
             item {
                 Text(
-                    text = "Nenhuma corrida encontrada para esse filtro.",
+                    text = "Nenhuma diária encontrada para esse filtro.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
 
-        items(estado.corridas, key = { it.id }) { corrida ->
-            CorridaListItem(
-                corrida = corrida,
-                lucro = Calculadora.lucroLiquido(corrida, estado.config),
-                onDelete = { viewModel.remover(corrida) }
+        items(estado.diarias, key = { it.id }) { diaria ->
+            DiariaListItem(
+                diaria = diaria,
+                onDelete = { viewModel.remover(diaria) }
             )
         }
     }

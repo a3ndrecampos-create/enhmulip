@@ -2,14 +2,12 @@ package com.andrecampos.lucronarota.ui.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.andrecampos.lucronarota.data.ConfigVeiculo
-import com.andrecampos.lucronarota.data.Corrida
-import com.andrecampos.lucronarota.data.CorridaRepository
+import com.andrecampos.lucronarota.data.Diaria
+import com.andrecampos.lucronarota.data.DiariaRepository
 import com.andrecampos.lucronarota.util.Calculadora
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -25,11 +23,10 @@ enum class Periodo(val rotulo: String) {
 data class DashboardUiState(
     val periodo: Periodo = Periodo.HOJE,
     val resumo: Calculadora.Resumo = Calculadora.Resumo(),
-    val corridasRecentes: List<Corrida> = emptyList(),
-    val config: ConfigVeiculo = ConfigVeiculo()
+    val diariasRecentes: List<Diaria> = emptyList()
 )
 
-class DashboardViewModel(private val repository: CorridaRepository) : ViewModel() {
+class DashboardViewModel(private val repository: DiariaRepository) : ViewModel() {
 
     private val periodoSelecionado = MutableStateFlow(Periodo.HOJE)
 
@@ -38,21 +35,17 @@ class DashboardViewModel(private val repository: CorridaRepository) : ViewModel(
 
     init {
         viewModelScope.launch {
-            combine(
-                periodoSelecionado,
-                repository.observarConfig()
-            ) { periodo, config -> Pair(periodo, config ?: ConfigVeiculo()) }
-                .flatMapLatest { (periodo, config) ->
+            periodoSelecionado
+                .flatMapLatest { periodo ->
                     val inicio = calcularInicio(periodo)
-                    val corridasFlow = if (inicio == null) repository.observarCorridas()
-                    else repository.observarCorridasDesde(inicio)
+                    val diariasFlow = if (inicio == null) repository.observarFinalizadas()
+                    else repository.observarFinalizadasDesde(inicio)
 
-                    corridasFlow.map { corridas ->
+                    diariasFlow.map { diarias ->
                         DashboardUiState(
                             periodo = periodo,
-                            resumo = Calculadora.resumir(corridas, config),
-                            corridasRecentes = corridas.take(5),
-                            config = config
+                            resumo = Calculadora.resumir(diarias),
+                            diariasRecentes = diarias.take(5)
                         )
                     }
                 }

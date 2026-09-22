@@ -1,12 +1,10 @@
 package com.andrecampos.lucronarota.ui.dashboard
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.FilterChip
@@ -19,12 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.andrecampos.lucronarota.ui.ViewModelFactory
-import com.andrecampos.lucronarota.ui.components.CorridaListItem
+import com.andrecampos.lucronarota.ui.components.DiariaListItem
 import com.andrecampos.lucronarota.ui.components.SecaoTitulo
 import com.andrecampos.lucronarota.ui.components.StatCard
 import com.andrecampos.lucronarota.ui.theme.Emerald
 import com.andrecampos.lucronarota.ui.theme.LucroNegativo
-import com.andrecampos.lucronarota.util.Calculadora
 import com.andrecampos.lucronarota.util.formatarKm
 import com.andrecampos.lucronarota.util.formatarMoeda
 
@@ -71,7 +68,7 @@ fun DashboardScreen(factory: ViewModelFactory) {
                 titulo = "Lucro líquido",
                 valor = estado.resumo.totalLucro.formatarMoeda(),
                 corValor = if (lucroPositivo) Emerald else LucroNegativo,
-                subtitulo = "${estado.resumo.totalCorridas} corrida(s) · ${estado.resumo.totalKm.formatarKm()}",
+                subtitulo = "${estado.resumo.totalDiarias} diária(s) · ${estado.resumo.totalKm.formatarKm()}",
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -114,24 +111,21 @@ fun DashboardScreen(factory: ViewModelFactory) {
         }
 
         item {
-            SecaoTitulo("Corridas recentes")
+            SecaoTitulo("Diárias recentes")
         }
 
-        if (estado.corridasRecentes.isEmpty()) {
+        if (estado.diariasRecentes.isEmpty()) {
             item {
                 Text(
-                    text = "Nenhuma corrida registrada ainda. Toque em \"Nova corrida\" para começar.",
+                    text = "Nenhuma diária finalizada ainda. Vá em \"Diária\" para começar a sua.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
 
-        items(estado.corridasRecentes, key = { it.id }) { corrida ->
-            CorridaListItem(
-                corrida = corrida,
-                lucro = Calculadora.lucroLiquido(corrida, estado.config)
-            )
+        items(estado.diariasRecentes, key = { it.id }) { diaria ->
+            DiariaListItem(diaria = diaria)
         }
     }
 }

@@ -15,10 +15,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.andrecampos.lucronarota.ui.ViewModelFactory
-import com.andrecampos.lucronarota.ui.configuracoes.ConfiguracoesScreen
 import com.andrecampos.lucronarota.ui.dashboard.DashboardScreen
+import com.andrecampos.lucronarota.ui.diaria.DiariaScreen
 import com.andrecampos.lucronarota.ui.historico.HistoricoScreen
-import com.andrecampos.lucronarota.ui.novacorrida.NovaCorridaScreen
+import com.andrecampos.lucronarota.ui.veiculos.VeiculosScreen
 
 @Composable
 fun LucroNaRotaApp(factory: ViewModelFactory) {
@@ -55,9 +55,9 @@ fun LucroNaRotaApp(factory: ViewModelFactory) {
             modifier = Modifier.padding(paddingInterno)
         ) {
             composable(Screen.Dashboard.route) { DashboardScreen(factory) }
-            composable(Screen.NovaCorrida.route) { NovaCorridaScreen(factory) }
+            composable(Screen.Diaria.route) { DiariaScreen(factory) }
             composable(Screen.Historico.route) { HistoricoScreen(factory) }
-            composable(Screen.Configuracoes.route) { ConfiguracoesScreen(factory) }
+            composable(Screen.Veiculos.route) { VeiculosScreen(factory) }
         }
     }
 }

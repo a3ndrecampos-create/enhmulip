@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.mlkit.text.recognition)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
