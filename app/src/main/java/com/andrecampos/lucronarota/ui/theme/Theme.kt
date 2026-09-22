@@ -17,6 +17,8 @@ private val DarkColors = darkColorScheme(
     onBackground = TextPrimaryDark,
     onSurface = TextPrimaryDark,
     onSurfaceVariant = TextSecondaryDark,
+    outline = SurfaceDarkAlt,
+    outlineVariant = SurfaceDarkAlt,
     error = LucroNegativo
 )
 
@@ -30,6 +32,8 @@ private val LightColors = lightColorScheme(
     onBackground = TextPrimaryLight,
     onSurface = TextPrimaryLight,
     onSurfaceVariant = TextSecondaryLight,
+    outline = SurfaceLightAlt,
+    outlineVariant = SurfaceLightAlt,
     error = LucroNegativo
 )
 

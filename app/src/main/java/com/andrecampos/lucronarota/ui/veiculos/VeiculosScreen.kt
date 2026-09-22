@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -87,11 +88,20 @@ fun VeiculosScreen(factory: ViewModelFactory) {
                                 Icon(Icons.Filled.DirectionsCar, contentDescription = null, tint = Emerald)
                                 Column(modifier = Modifier.padding(start = 10.dp)) {
                                     Text(veiculo.nome, style = MaterialTheme.typography.titleMedium)
-                                    Text(
-                                        "R$ ${veiculo.precoCombustivel}/L · ${veiculo.consumoKmPorLitro} km/L",
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
+                                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                        Text(
+                                            "R$ ${veiculo.precoCombustivel}/L",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            fontFamily = FontFamily.Monospace,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Text(
+                                            "${veiculo.consumoKmPorLitro} km/L",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            fontFamily = FontFamily.Monospace,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
                             }
                             IconButton(onClick = { viewModel.remover(veiculo) }) {

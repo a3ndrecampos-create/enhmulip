@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -158,6 +159,7 @@ private fun TelaFinalizarDiaria(estado: DiariaUiState, viewModel: DiariaViewMode
             Text(
                 text = "Km inicial: ${diaria.kmInicial.formatarKm()}",
                 style = MaterialTheme.typography.bodyMedium,
+                fontFamily = FontFamily.Monospace,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -210,14 +212,14 @@ private fun TelaFinalizarDiaria(estado: DiariaUiState, viewModel: DiariaViewMode
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("Km rodado", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(estado.kmRodadoPrevisto.formatarKm())
+                Text(estado.kmRodadoPrevisto.formatarKm(), fontFamily = FontFamily.Monospace)
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("Custo estimado", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(estado.custoPrevisto.formatarMoeda(), color = LucroNegativo)
+                Text(estado.custoPrevisto.formatarMoeda(), fontFamily = FontFamily.Monospace, color = LucroNegativo)
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -226,6 +228,7 @@ private fun TelaFinalizarDiaria(estado: DiariaUiState, viewModel: DiariaViewMode
                 Text("Lucro líquido estimado", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(
                     estado.lucroPrevisto.formatarMoeda(),
+                    fontFamily = FontFamily.Monospace,
                     color = if (estado.lucroPrevisto >= 0) Emerald else LucroNegativo
                 )
             }
@@ -289,6 +292,7 @@ private fun LinhaAnalise(
         Text(
             text = valor,
             style = if (destaque) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyMedium,
+            fontFamily = FontFamily.Monospace,
             color = if (destaque) (if (positivo) Emerald else LucroNegativo) else MaterialTheme.colorScheme.onSurface
         )
     }
