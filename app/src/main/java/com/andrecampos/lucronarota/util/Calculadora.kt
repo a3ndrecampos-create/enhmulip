@@ -5,22 +5,26 @@ import com.andrecampos.lucronarota.data.Veiculo
 
 /**
  * Regras de cálculo do app:
- * - custoPorKm = (preço do combustível / consumo km por litro) + outros custos por km
- *   (outros custos por km cobre desgaste de pneu, óleo, manutenção estimada).
- * - custoDaDiaria = kmRodado * custoPorKm + custoFixoDiario
- * - lucroLiquido = ganho - custoDaDiaria
+ * - custoCombustivelPorKm = preço do combustível / consumo km por litro.
+ * - custo de combustível da diária = soma dos abastecimentos reais do dia,
+ *   se houver algum registrado; senão, a estimativa (kmRodado * custoPorKm).
+ * - custoDaDiaria = custo de combustível + kmRodado * outros custos por km
+ *   (pneu, óleo, manutenção) + custo fixo diário (seguro, financiamento).
+ * - lucroLiquido = ganho - custoDaDiaria.
  */
 object Calculadora {
 
-    fun custoPorKm(veiculo: Veiculo): Double {
-        val custoCombustivelPorKm = if (veiculo.consumoKmPorLitro > 0) {
-            veiculo.precoCombustivel / veiculo.consumoKmPorLitro
-        } else 0.0
-        return custoCombustivelPorKm + veiculo.outrosCustosPorKm
-    }
+    fun custoCombustivelPorKm(veiculo: Veiculo): Double =
+        if (veiculo.consumoKmPorLitro > 0) veiculo.precoCombustivel / veiculo.consumoKmPorLitro else 0.0
+
+    fun custoCombustivelDaDiaria(diaria: Diaria): Double =
+        if (diaria.custoCombustivelReal > 0) diaria.custoCombustivelReal
+        else diaria.kmRodado * diaria.custoCombustivelPorKmSnapshot
 
     fun custoDaDiaria(diaria: Diaria): Double =
-        diaria.kmRodado * diaria.custoPorKmSnapshot + diaria.custoFixoSnapshot
+        custoCombustivelDaDiaria(diaria) +
+            diaria.kmRodado * diaria.custoOutrosPorKmSnapshot +
+            diaria.custoFixoSnapshot
 
     fun lucroLiquido(diaria: Diaria): Double = (diaria.ganho ?: 0.0) - custoDaDiaria(diaria)
 

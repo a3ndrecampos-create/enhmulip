@@ -21,7 +21,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val database = AppDatabase.obterInstancia(applicationContext)
-        val repository = DiariaRepository(database.diariaDao(), database.veiculoDao())
+        val repository = DiariaRepository(
+            database.diariaDao(),
+            database.veiculoDao(),
+            database.abastecimentoDao()
+        )
         val factory = ViewModelFactory(repository)
 
         setContent {

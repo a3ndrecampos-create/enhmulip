@@ -7,9 +7,15 @@ import androidx.room.PrimaryKey
  * Uma diária de trabalho: começa quando o motorista registra o km inicial
  * e termina quando ele registra o km final + o ganho do dia.
  *
- * custoPorKmSnapshot / custoFixoSnapshot guardam os custos do veículo no
- * momento em que a diária foi iniciada, para que uma mudança futura no preço
- * do combustível (por exemplo) não altere o resultado de diárias passadas.
+ * custoCombustivelPorKmSnapshot / custoOutrosPorKmSnapshot / custoFixoSnapshot
+ * guardam os custos do veículo no momento em que a diária foi iniciada, para
+ * que uma mudança futura no preço do combustível não altere o resultado de
+ * diárias passadas.
+ *
+ * custoCombustivelReal é preenchido com a soma dos abastecimentos que o
+ * motorista registrou durante o dia. Quando existe (> 0), ele substitui a
+ * estimativa por km só para a parte de combustível — porque o preço muda de
+ * posto pra posto e o valor real é mais preciso que a média configurada.
  */
 @Entity(tableName = "diarias")
 data class Diaria(
@@ -17,8 +23,10 @@ data class Diaria(
     val id: Long = 0,
     val veiculoId: Long,
     val veiculoNome: String,
-    val custoPorKmSnapshot: Double,
+    val custoCombustivelPorKmSnapshot: Double,
+    val custoOutrosPorKmSnapshot: Double,
     val custoFixoSnapshot: Double,
+    val custoCombustivelReal: Double = 0.0,
     val kmInicial: Double,
     val kmFinal: Double? = null,
     val ganho: Double? = null,
